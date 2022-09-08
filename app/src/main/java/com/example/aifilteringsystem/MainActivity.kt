@@ -10,14 +10,14 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
-    var urlText: ArrayList<EditText>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val recyclerView = findViewById<RecyclerView>(R.id.main_recyclerView)
         recyclerView.adapter = RecyclerViewAdapter(layoutInflater)
+
+//        recyclerView.adapter.notifyDataSetChanged()
 
         findViewById<AppCompatButton>(R.id.plus_button).setOnClickListener {
 
