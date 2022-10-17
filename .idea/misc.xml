@@ -3,13 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/drawable/tab_selector.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/drawable/url_bg.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/url_item.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/ujjsi/AndroidStudioProjects/AIFiltering/app/src/main/res/drawable/url_bg.xml" value="0.2898148148148148" />
-        <entry key="..\:/Users/ujjsi/AndroidStudioProjects/AIFiltering/app/src/main/res/layout/activity_add.xml" value="0.33" />
-        <entry key="..\:/Users/ujjsi/AndroidStudioProjects/AIFiltering/app/src/main/res/layout/activity_main.xml" value="0.5536458333333333" />
-        <entry key="..\:/Users/ujjsi/AndroidStudioProjects/AIFiltering/app/src/main/res/layout/main_fragment.xml" value="0.5494791666666666" />
-        <entry key="..\:/Users/ujjsi/AndroidStudioProjects/AIFiltering/app/src/main/res/layout/url_item.xml" value="0.4571917808219178" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/activity_network_check.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/add_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/option_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/save_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/JS/AndroidStudioProjects/AIFilteringSystem/app/src/main/res/layout/url_item.xml" value="0.264" />
       </map>
     </option>
   </component>
