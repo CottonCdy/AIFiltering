@@ -7,25 +7,17 @@
     android:orientation="vertical"
     tools:context=".AddFragment">
 
-    <EditText
-        android:id="@+id/edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="SAVE" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="분류"/>
+        android:layout_gravity="center"
+        android:text="분류" />
 
-    <TextView
-        android:id="@+id/text"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/save_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:text="Save"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.View.VISIBLE
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -61,14 +62,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         networkCheck = NetworkConnection(this)
+
+        networkCheck.register()
+
         if(networkCheck.getConnectivityStatus() == null) {
             networkCheck.dialog.show()
         }
-        else{
-            Log.d("testtest", " nonnull")
-        }
-
-        networkCheck.register()
     }
 
     override fun onDestroy() {

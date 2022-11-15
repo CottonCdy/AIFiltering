@@ -46,19 +46,25 @@ class NetworkConnection(private val context: Context) :
                     super.onAvailable(network)
                     if (getConnectivityStatus() == null) {
                         // 네트워크 연결 안 되어 있을 때
+                        // Log.d("testtest", "Alost")
                         dialog.show()
-                        Log.d("testtest", "Alost")
                     } else {
                         // 네트워크 연결 되어 있을 때
-                        dialog.dismiss()
-                        Log.d("testtest", "dismiss")
+                        // Log.d("testtest", "dismiss")
+
+                        if(dialog.isShowing) {
+                            dialog.hide()
+                        }
                     }
                 }
 
                 override fun onLost(network: Network) {
                     super.onLost(network)
-                    dialog.show()
                     Log.d("testtest", "lost")
+
+                    if(!(dialog.isShowing)) {
+                        dialog.show()
+                    }
                 }
             })
     }
