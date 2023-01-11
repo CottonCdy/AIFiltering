@@ -1,6 +1,5 @@
 package com.example.aifilteringsystem
 
-import android.content.Context
 import android.os.*
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,14 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import org.json.JSONArray
-import org.json.JSONObject
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.youtube.model.CommentThreadListResponse
 
 
 class CommentFragment : Fragment() {
+    private val videoId = "OlZveif37Z4"
+    private val DEVELOPER_KEY = "AIzaSyBK2sZ7-erhVTkTqNy7i6KWYyfxCnS_0xo"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -24,56 +24,68 @@ class CommentFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val bundle = arguments
-        val commentsArrayList = bundle?.getStringArrayList("commentsArrayList")
+        var bundle = arguments
+
+        var dataList = JacksonFactory().fromString(
+            bundle?.getString("data"),
+            CommentThreadListResponse::class.java
+        )
+
+        var nextToken = bundle?.getString("token")
 
         // 댓글 리사이클러뷰
         val commentRecyclerView = view.findViewById<RecyclerView>(R.id.comment_recycler)
-        val adapter = CommentRecyclerViewAdapter(commentsArrayList!!, requireContext(), layoutInflater)
+        val adapter = CommentRecyclerViewAdapter(dataList, requireContext(), layoutInflater)
         commentRecyclerView.adapter = adapter
-        adapter.settingData() // 데이터 세팅
-        adapter.setOnItemClickListener(object : CommentRecyclerViewAdapter.OnItemClickListener {
-            override fun onItemClick(v: View?, pos: Int) {
-                // childFragmentManager.beginTransaction().replace(R.id.comment_container, RepliesCommentFragment()).commit()
-                val repliesCommentFragment = RepliesCommentFragment()
-                bundle?.putInt("position", pos)
-                repliesCommentFragment.arguments = bundle
-                parentFragmentManager.beginTransaction().apply {
-                    replace(R.id.container, repliesCommentFragment)
-                    addToBackStack(null)
-                    commit()
+
+        commentRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                // 마지막 스크롤된 항목 위치
+                val lastItem =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                val lastItemCount = recyclerView.adapter!!.itemCount - 1
+
+                if (lastItem == lastItemCount) {
+                    if (nextToken != null) {
+                        Thread {
+                            (activity as RunActivity).commentAPI(nextToken, true)
+
+                            bundle = arguments
+
+                            dataList = JacksonFactory().fromString(
+                                bundle?.getString("data"),
+                                CommentThreadListResponse::class.java
+                            )
+
+                            nextToken = bundle?.getString("token")
+
+                            adapter.addItem(dataList) // 기존 리사이클러뷰에 아이템 추가
+                            (activity as RunActivity).updateCommentRecyclerView(adapter)
+
+                            Log.d("testtest", adapter.itemCount.toString())
+                        }.start()
+                    } else {
+                        Log.d("testtest", "댓글의 끝입니다.")
+                    }
+
+                    Log.d("testtest", "last")
                 }
             }
         })
 
+        adapter.setOnItemClickListener(
+            object : CommentRecyclerViewAdapter.OnItemClickListener {
+                override fun onItemClick(v: View?, pos: Int) {
+                    val commentTotalDataList = adapter.getItem()
+
+                    Thread {
+                        (activity as RunActivity).repliesCommentAPI(commentTotalDataList.items.get(pos))
+                    }.start()
+                }
+            })
+
         val commentCountText = view.findViewById<TextView>(R.id.comment_count)
-
-        //val commentCount = adapter.itemCount
-        //val repliesCommentCount = adapter.getRepliesItemCount()
-
-        //commentCountText.text = "댓글 " + commentCount + "개, " + "답글 " + repliesCommentCount + "개"
+        commentCountText.text = "댓글 " + (activity as RunActivity).commentCount.toString() + "개"
     }
-/*
-    fun commentsListOrganize() {
-        val gson = Gson()
-        val commentItemsList = arrayListOf<CommentItems>()
-
-        for (i in 0 until commentsArrayList!!.size) {
-            val commentItems = gson.fromJson(commentsArrayList?.get(i), CommentItems::class.java)
-
-            for (j in 0 until commentItems.items.size) {
-                val topProfile =
-                    commentItems.items.get(j).snippet.topLevelComment.snippet.authorProfileImageUrl
-                val topAuthorName =
-                    commentItems.items.get(j).snippet.topLevelComment.snippet.authorDisplayName
-                val topComment =
-                    commentItems.items.get(j).snippet.topLevelComment.snippet.textDisplay
-
-                Log.d("testtest", topProfile + " " + topAuthorName + " " + topComment)/*
-                val repliesProfile = commentItems.items.get(j).replies.comments.
-                val repliesAuthorName = commentItems.items.get(j).snippet.topLevelComment.snippet.authorDisplayName
-                val repliesComment = commentItems.items.get(j).snippet.topLevelComment.snippet.textDisplay*/
-            }
-        }
-    }*/
 }

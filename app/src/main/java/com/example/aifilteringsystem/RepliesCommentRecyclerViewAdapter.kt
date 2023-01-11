@@ -9,11 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.api.services.youtube.model.CommentListResponse
+import com.google.api.services.youtube.model.CommentThreadListResponse
+import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 
 class RepliesCommentRecyclerViewAdapter(
-    val repliesCommentList: JSONArray,
+    val repliesCommentsList: CommentListResponse,
     val context: Context,
     val inflater: LayoutInflater
 ) : RecyclerView.Adapter<RepliesCommentRecyclerViewAdapter.ViewHolder>() {
@@ -63,20 +66,18 @@ class RepliesCommentRecyclerViewAdapter(
         else holder.textBackground.setBackgroundColor(Color.parseColor("FFFFFF"))
         */
 
-        val repliesProfile = repliesCommentList
-            .getJSONObject(position)
-            .getJSONObject("snippet")
-            .getString("authorProfileImageUrl")
+        // 현재 댓글
+        /*val currentTopComment = commentItemsList.get(topPos)
 
-        val repliesAuthorName = repliesCommentList
-            .getJSONObject(position)
-            .getJSONObject("snippet")
-            .getString("authorDisplayName")
+        val repliesProfile =
+            currentTopComment.replies.comments.get(position).snippet.authorProfileImageUrl
+        val repliesAuthorName =
+            currentTopComment.replies.comments.get(position).snippet.authorDisplayName
+        val repliesComment = currentTopComment.replies.comments.get(position).snippet.textDisplay
 
-        val repliesComment = repliesCommentList
-            .getJSONObject(position)
-            .getJSONObject("snippet")
-            .getString("textDisplay")
+        Log.d("testtest",    ""+commentItemsList.get(0).toString())
+        Log.d("testtest",    ""+commentItemsList.get(topPos).toString())
+
 
         Glide.with(context)
             .load(repliesProfile)
@@ -86,9 +87,28 @@ class RepliesCommentRecyclerViewAdapter(
 
         holder.repliesAuthorName.text = repliesAuthorName
         holder.repliesComment.text = repliesComment
+
+        */
+
+        Glide.with(context)
+            .load(repliesCommentsList.items.get(position).snippet.authorProfileImageUrl)
+            .centerCrop()
+            .circleCrop()
+            .into(holder.repliesProfile)
+
+        holder.repliesAuthorName.text =
+            repliesCommentsList.items.get(position).snippet.authorDisplayName
+        holder.repliesComment.text =
+            repliesCommentsList.items.get(position).snippet.textDisplay
     }
 
     override fun getItemCount(): Int {
-        return repliesCommentList.length()
+        return repliesCommentsList.items.size
+    }
+
+    fun addItem(repliesCommentsAddList: CommentListResponse){
+        for(i in 0 until repliesCommentsAddList.items.size){
+            repliesCommentsList.items.add(repliesCommentsAddList.items.get(i))
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.aifilteringsystem
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.api.services.youtube.model.Comment
+import com.google.api.services.youtube.model.CommentThread
+import com.google.api.services.youtube.model.CommentThreadListResponse
+import com.google.api.services.youtube.model.CommentThreadSnippet
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,14 +25,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class CommentRecyclerViewAdapter(
-    val commentsArrayList: ArrayList<String>,
-    val context: Context,
-    val inflater: LayoutInflater
+    val commentList: CommentThreadListResponse, val context: Context, val inflater: LayoutInflater
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.ViewHolder>() {
     lateinit var listener: OnItemClickListener
-
-    // private val commentItem = commentsList.getJSONArray("items")
-    private val commentItemsList = arrayListOf<CommentSnippet>()
 
     interface OnItemClickListener {
         //클릭시 동작할 함수
@@ -88,83 +88,44 @@ class CommentRecyclerViewAdapter(
         */
 
         // Log.d("testtest", commentsArrayList.get(0))
-/*
-        val topProfile = commentItem.getJSONObject(position)
-            .getJSONObject("snippet")
-            .getJSONObject("topLevelComment")
-            .getJSONObject("snippet")
-            .getString("authorProfileImageUrl")
 
-        val topComment = commentItem.getJSONObject(position)
-            .getJSONObject("snippet")
-            .getJSONObject("topLevelComment")
-            .getJSONObject("snippet")
-            .getString("textDisplay")
-
-        val topAuthorName = commentItem.getJSONObject(position)
-            .getJSONObject("snippet")
-            .getJSONObject("topLevelComment")
-            .getJSONObject("snippet")
-            .getString("authorDisplayName")
+        val topProfile =
+            commentList.items.get(position).snippet.topLevelComment.snippet.authorProfileImageUrl
+        val topAuthorName =
+            commentList.items.get(position).snippet.topLevelComment.snippet.authorDisplayName
+        val topComment =
+            commentList.items.get(position).snippet.topLevelComment.snippet.textDisplay
 
         // 답글 있으면 표시, 없으면 숨기기
-        if (commentItem.getJSONObject(position).getJSONObject("snippet")
-                .getInt("totalReplyCount") > 0
-        ) {
+        if (commentList.items.get(position).snippet.totalReplyCount > 0) {
             holder.repliesComment.visibility = View.VISIBLE
             holder.repliesComment.text =
-                "답글 " + commentItem.getJSONObject(position).getJSONObject("snippet")
-                    .getInt("totalReplyCount").toString() + "개 보기"
+                "답글 " + commentList.items.get(position).snippet.totalReplyCount.toString() + "개 보기"
         } else {
             holder.repliesComment.visibility = View.GONE
         }
 
         // 프로필
-        Glide.with(context)
-            .load(topProfile)
-            .centerCrop()
-            .circleCrop()
-            .into(holder.profile)
+        Glide.with(context).load(topProfile).centerCrop().circleCrop().into(holder.profile)
 
         // 닉네임
-        holder.authorName.text = topAuthorName
+        holder.authorName.text = topAuthorName.toString()
 
         // 댓글
-        holder.comment.text = topComment
-
- */
+        holder.comment.text = topComment.toString()
     }
 
     override fun getItemCount(): Int {
-        //return commentItem.length()
-        return 0
+        return commentList.items.size
     }
-/*
-    fun getRepliesItemCount(): Int {
-        var size: Int = 0
 
-        for (i in 0 until commentItem.length()) {
-            size += commentItem.getJSONObject(i).getJSONObject("snippet").getInt("totalReplyCount")
+    fun addItem(commentAddList: CommentThreadListResponse) {
+        for (i in 0 until commentAddList.items.size) {
+            commentList.items.add(commentAddList.items.get(i)) // 댓글 추가
         }
+    }
 
-        return size
-    }*/
-
-    fun settingData() {
-        for (i in 0 until commentsArrayList.size) {
-            val commentItems = Gson().fromJson(JSONObject(commentsArrayList.get(i)).toString(), CommentItems::class.java)
-
-            for (j in 0 until commentItems.items.size) {
-                commentItemsList.add(commentItems.items.get(j))
-            }
-        }
-
-        var count = 0
-
-        for (i in 0 until commentItemsList.size) {
-            count += commentItemsList.get(i).snippet.totalReplyCount
-        }
-
-        Log.d("testtest", commentItemsList.size.toString() + count)
+    fun getItem(): CommentThreadListResponse {
+        return commentList
     }
 }

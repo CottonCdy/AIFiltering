@@ -35,48 +35,6 @@ class Highlights(
     val offset: Int, val length: Int
 )
 
-class CommentItems(
-    val items: List<CommentSnippet>,
-    val nextPageToken: String
-)
-
-class CommentSnippet(
-    val snippet: TopLevelComment, val replies: RepliesComment
-)
-
-class TopLevelComment(
-    val topLevelComment: TopLevelSnippet,
-    val totalReplyCount: Int
-)
-
-class TopLevelSnippet(
-    val snippet: TopLevelCommentField
-)
-
-class RepliesComment(
-    val comments: List<RepliesSnippet>
-)
-
-class RepliesSnippet(
-    val snippet: RepliesCommentField
-)
-
-class TopLevelCommentField(
-    val textDisplay: String,
-    val authorDisplayName: String,
-    val authorProfileImageUrl: String,
-    val likeCount: Int,
-    val updatedAt: String
-)
-
-class RepliesCommentField(
-    val textDisplay: String,
-    val authorDisplayName: String,
-    val authorProfileImageUrl: String,
-    val likeCount: Int,
-    val updatedAt: String
-)
-
 interface RetrofitService {
     @Headers("Content-Type: application/json")
     @POST("analyze")
@@ -90,6 +48,7 @@ interface RetrofitService {
     fun commentThreadsAPI(
         @Query("key") key: String,
         @Query("videoId") videoId: String,
+        @Query("maxResults") maxResults: Int = 100,
         @Query("part") part: String = "snippet, replies",
         @Query("textFormat") textFormat: String = "plainText",
         @Query("fields") fields: String = "nextPageToken, items(snippet(topLevelComment(snippet(authorProfileImageUrl, likeCount, updatedAt, authorDisplayName, textDisplay)), totalReplyCount), replies(comments(snippet(authorProfileImageUrl, likeCount, updatedAt, authorDisplayName, textDisplay))))",
@@ -100,6 +59,7 @@ interface RetrofitService {
         @Query("key") key: String,
         @Query("videoId") videoId: String,
         @Query("pageToken") pageToken: String,
+        @Query("maxResults") maxResults: Int = 100,
         @Query("part") part: String = "snippet, replies",
         @Query("textFormat") textFormat: String = "plainText",
         @Query("fields") fields: String = "nextPageToken, items(snippet(topLevelComment(snippet(authorProfileImageUrl, likeCount, updatedAt, authorDisplayName, textDisplay)), totalReplyCount), replies(comments(snippet(authorProfileImageUrl, likeCount, updatedAt, authorDisplayName, textDisplay))))",

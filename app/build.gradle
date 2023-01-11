@@ -24,6 +24,10 @@ android {
         }
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -39,7 +43,6 @@ android {
         noCompress 'tflite'
     }
 }
-
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
@@ -56,4 +59,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
     implementation 'kr.co.prnd:youtube-player-view:1.4.1'
+
+    implementation 'com.google.api-client:google-api-client:1.30.5'
+    implementation 'com.google.api-client:google-api-client-jackson2:1.20.0'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
 }

@@ -17,40 +17,48 @@ import androidx.recyclerview.widget.RecyclerView
 // TODO: 2022-10-16 : 만들기 버튼에 리스너 달기, 해당 url 영상 가져오기
 
 class AddFragment : Fragment() {
-    lateinit var plusBtn: AppCompatButton
-    lateinit var minusBtn: AppCompatButton
-    lateinit var makeBtn: AppCompatButton
-    lateinit var recyclerView: RecyclerView
-    lateinit var addAdapter: AddRecyclerViewAdapter
-    var urlTextList = ArrayList<View>() // url 입력창의 생성 개수
+    val list = arrayListOf<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addAdapter.addItem(layoutInflater.inflate(R.layout.url_item, recyclerView, false))
+        list.add("")
 
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        val adapter = AddRecyclerViewAdapter(list, layoutInflater)
+        recyclerView.adapter = adapter
+
+
+
+        val plusBtn = view.findViewById<AppCompatButton>(R.id.plus_button)
         // + 이벤트 리스너
         plusBtn.setOnClickListener {
-            if (urlTextList.size > 9) {
+            if (adapter.editTextList.size > 9) {
                 Toast.makeText(context, "10개가 최대입니다.", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                Log.d("LogLog", addAdapter.itemCount.toString())
-                addAdapter.addItem(layoutInflater.inflate(R.layout.url_item, recyclerView, false))
+                Log.d("testtest", adapter.itemCount.toString())
+                adapter.addItem(layoutInflater.inflate(R.layout.url_item, null, false))
             }
         }
 
+        val minusBtn = view.findViewById<AppCompatButton>(R.id.minus_button)
         // - 이벤트 리스너
         minusBtn.setOnClickListener {
-            if (urlTextList.size <= 1) {
+            if (adapter.editTextList.size <= 1) {
                 Toast.makeText(context, "더 이상 없앨 수 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
-                addAdapter.removeItem()
+                adapter.removeItem()
             }
         }
 
+        val makeBtn = view.findViewById<AppCompatButton>(R.id.make_button)
         // 만들기 버튼 리스너
         makeBtn.setOnClickListener {
+            // Todo: make btn save
+            //for (i in 0 until adapter.itemCount) {
+                Log.d("testtest", "" + adapter.editTextList.get(0).text)
+            //}
 //            startActivity(Intent(this, MainActivity::class.java))
         }
     }
@@ -60,14 +68,6 @@ class AddFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.add_fragment, container, false)
-        recyclerView = view.findViewById(R.id.recycler_view)
-        addAdapter = AddRecyclerViewAdapter(urlTextList, inflater)
-        recyclerView.adapter = addAdapter
-        plusBtn = view.findViewById(R.id.plus_button)
-        minusBtn = view.findViewById(R.id.minus_button)
-        makeBtn = view.findViewById(R.id.make_button)
-
-        return view
+        return inflater.inflate(R.layout.add_fragment, container, false)
     }
 }

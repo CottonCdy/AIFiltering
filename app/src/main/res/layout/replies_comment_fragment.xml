@@ -50,11 +50,12 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/replies_comment_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/replies_comment_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#E8D9FF"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>
